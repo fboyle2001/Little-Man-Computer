@@ -1,0 +1,18 @@
+        lda space
+        sta char
+loop    lda char
+        out
+        lda space
+        otc
+        lda char
+        otc
+        add one
+        sta char
+        sub max
+        brz end
+        bra loop
+end     hlt
+space   dat 32
+one     dat 1
+max     dat 97
+char    dat 0
