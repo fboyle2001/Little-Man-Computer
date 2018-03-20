@@ -1,4 +1,4 @@
-package com.finlay.lmc.instructions;
+package com.finlay.lmc.computer.instructions;
 
 public enum OpCode {
 

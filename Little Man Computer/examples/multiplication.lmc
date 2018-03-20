@@ -11,7 +11,6 @@ MULLOOP 	LDA MULTIPLER
         	STA RESULT
         	LDA MULTIPLER
         	BRP MULLOOP
-        	BRZ MULEND
 MULEND  	LDA RESULT
         	OUT
 ONE     	DAT 1

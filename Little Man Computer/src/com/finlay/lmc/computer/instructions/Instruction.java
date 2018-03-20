@@ -1,4 +1,4 @@
-package com.finlay.lmc.instructions;
+package com.finlay.lmc.computer.instructions;
 
 import static com.finlay.lmc.computer.Memory.MAX_MEMORY;
 
@@ -36,6 +36,15 @@ public class Instruction {
 	
 	public int toInteger() {
 		return opcode.getCode() * MAX_MEMORY + address;
+	}
+	
+	@Override
+	public String toString() {
+		if(label != null) {
+			return label + " " + opcode.name() + " " + address;
+		}
+		
+		return opcode.name() + " " + address;
 	}
 	
 }

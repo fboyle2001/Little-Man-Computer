@@ -6,20 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.finlay.lmc.computer.LittleManComputer;
-import com.finlay.lmc.instructions.InstructionParser;
+import com.finlay.lmc.computer.instructions.InstructionParser;
 
 import lib.finlay.core.io.SerialFileHandler;
 
 public class Program {
 
 	private SerialFileHandler handler;
+	private boolean dumpMemory;
 	
 	public Program(File file) {
+		this(file, false);
+	}
+	
+	public Program(File file, boolean dumpMemory) {
 		try {
 			this.handler = new SerialFileHandler(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		this.dumpMemory = dumpMemory;
+	}
+	
+	public void setDumpMemory(boolean dumpMemory) {
+		this.dumpMemory = dumpMemory;
 	}
 	
 	public void execute() throws IOException {
@@ -34,7 +45,10 @@ public class Program {
 		
 		LittleManComputer computer = new LittleManComputer(InstructionParser.parse(ready));
 		computer.start();
-		//computer.getMemory().print();
+		
+		if(dumpMemory) {
+			computer.getMemory().print();
+		}
 	}
 	
 }

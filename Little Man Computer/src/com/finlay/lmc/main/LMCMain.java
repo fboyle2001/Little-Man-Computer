@@ -7,7 +7,7 @@ import com.finlay.lmc.programs.DefaultPrograms;
 public class LMCMain {
 
 	public static void main(String[] args) throws IOException {
-		DefaultPrograms.MEAN.execute();
+		DefaultPrograms.FUNCTION_EXAMPLE.execute();
 	}
 	
 }

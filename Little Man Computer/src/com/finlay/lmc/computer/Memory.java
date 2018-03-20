@@ -3,7 +3,7 @@ package com.finlay.lmc.computer;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import com.finlay.lmc.instructions.Instruction;
+import com.finlay.lmc.computer.instructions.Instruction;
 
 public class Memory {
 

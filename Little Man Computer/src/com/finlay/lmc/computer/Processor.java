@@ -1,6 +1,7 @@
 package com.finlay.lmc.computer;
 
-import com.finlay.lmc.instructions.Instruction;
+import com.finlay.lmc.computer.instructions.Instruction;
+import static com.finlay.lmc.computer.Memory.MAX_MEMORY;
 
 public class Processor {
 
@@ -8,34 +9,41 @@ public class Processor {
 	
 	private int accumulator;
 	private int programCounter;
+	private int accAddress;
 	
 	public Processor(LittleManComputer computer) {
 		this.computer = computer;
 		this.accumulator = 0;
 		this.programCounter = 0;
+		this.accAddress = MAX_MEMORY / 2;
 	}
 	
 	public void executeInstruction() {
 		Instruction instruction = computer.getMemory().getInstructionAt(programCounter);
 		boolean incremented = false;
 		
+		//System.out.println(instruction);
+		//System.out.println(instruction.getAddress());
+		//System.out.println();
+		//System.out.println(accumulator);
 		switch(instruction.getOpcode()) {
 		case ADD:
 			accumulator += computer.getMemory().get(instruction.getAddress());
 			break;
 		case BRA:
-			this.programCounter = instruction.getAddress();
+			// -1 denotes use the value in the accumulator. Only present if strict is disabled.
+			this.programCounter = instruction.getAddress() == accAddress ? this.accumulator : instruction.getAddress();
 			incremented = true;
 			break;
 		case BRP:
 			if(accumulator >= 0) {
-				this.programCounter = instruction.getAddress();
+				this.programCounter = instruction.getAddress() == accAddress ? this.accumulator : instruction.getAddress();
 				incremented = true;
 			}
 			break;
 		case BRZ:
 			if(accumulator == 0) {
-				this.programCounter = instruction.getAddress();
+				this.programCounter = instruction.getAddress() == accAddress ? this.accumulator : instruction.getAddress();
 				incremented = true;
 			}
 			break;

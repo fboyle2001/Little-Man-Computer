@@ -1,4 +1,4 @@
-package com.finlay.lmc.instructions;
+package com.finlay.lmc.computer.instructions;
 
 import static com.finlay.lmc.computer.Memory.MAX_MEMORY;
 
@@ -13,7 +13,12 @@ import com.finlay.lmc.computer.Memory;
 public class InstructionParser {
 	
 	public static Memory parse(List<String> code) {
+		boolean strict = false; //If true, ACC is not allowed.
 		ArrayList<String[]> parts = new ArrayList<>(code.size());
+		
+		if(code.get(0).equalsIgnoreCase("STRICT")) {
+			strict = true;
+		}
 		
 		for(String line : code) {
 			if(line.startsWith("//") || line.startsWith("#")) {
@@ -25,12 +30,34 @@ public class InstructionParser {
 			line = line.replaceAll("OUT", "OUT 2");
 			line = line.replaceAll("OTC", "OTC 22");
 			
+			String[] split = line.split(" ");
+			
+			if(strict) {
+				if(split.length == 2) {
+					if(split[1].equalsIgnoreCase("ACC")) {
+						System.out.println("ACC not allowed in strict mode.");
+						return null;
+					}
+				} else if(split.length == 3) {
+					if(split[2].equalsIgnoreCase("ACC")) {
+						System.out.println("ACC not allowed in strict mode.");
+						return null;
+					}
+				}
+			}
+			
 			parts.add(line.split(" "));
 		}
+		
+		//parts.forEach(x -> System.out.println(Arrays.toString(x)));
 		
 		Memory memory = new Memory();
 		HashMap<String, Integer> labels = compileLabelAddresses(parts); // i
 		HashMap<String, Integer[]> variables = compileLabelVariables(parts); // 99 - i
+		
+		if(!strict) {
+			labels.put("ACC", MAX_MEMORY / 2);
+		}
 		
 		for(int i = 0; i < parts.size(); i++) {
 			String[] line = parts.get(i);
