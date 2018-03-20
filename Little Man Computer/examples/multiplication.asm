@@ -1,0 +1,19 @@
+        	INP
+        	STA MULTIPLER
+        	INP
+        	STA MULTI
+MULLOOP 	LDA MULTIPLER
+        	BRZ MULEND
+        	SUB ONE
+        	STA MULTIPLER
+        	LDA RESULT
+        	ADD MULTI
+        	STA RESULT
+        	LDA MULTIPLER
+        	BRP MULLOOP
+MULEND  	LDA RESULT
+        	OUT
+ONE     	DAT 1
+RESULT  	DAT 0
+MULTIPLER 	DAT 0
+MULTI   	DAT 0
