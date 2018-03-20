@@ -15,13 +15,18 @@ public class InstructionParser {
 	public static Memory parse(List<String> code) {
 		ArrayList<String[]> parts = new ArrayList<>(code.size());
 		
-		code.forEach(line -> {
+		for(String line : code) {
+			if(line.startsWith("//") || line.startsWith("#")) {
+				continue;
+			}
+			
 			line = line.replaceAll("HLT", "HLT 0");
 			line = line.replaceAll("INP", "INP 1");
 			line = line.replaceAll("OUT", "OUT 2");
 			line = line.replaceAll("OTC", "OTC 22");
+			
 			parts.add(line.split(" "));
-		});
+		}
 		
 		Memory memory = new Memory();
 		HashMap<String, Integer> labels = compileLabelAddresses(parts); // i
@@ -45,7 +50,6 @@ public class InstructionParser {
 					case SUB:
 					case STA:
 					case STO:
-						System.out.println(line[1]);
 						address = variables.get(line[1])[0];
 						break;
 					case BRA:

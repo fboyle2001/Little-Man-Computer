@@ -18,6 +18,7 @@ public class Processor {
 	public void executeInstruction() {
 		Instruction instruction = computer.getMemory().getInstructionAt(programCounter);
 		boolean incremented = false;
+		
 		switch(instruction.getOpcode()) {
 		case ADD:
 			accumulator += computer.getMemory().get(instruction.getAddress());

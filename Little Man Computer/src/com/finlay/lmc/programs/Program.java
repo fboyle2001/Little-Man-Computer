@@ -27,7 +27,7 @@ public class Program {
 		List<String> ready = new ArrayList<>(contents.size());
 		
 		contents.forEach(line -> {
-			ready.add(line.toUpperCase().trim().replaceAll(" +", " ").replaceAll("\t+", " "));
+			ready.add(line.toUpperCase().trim().replaceAll("\t+", " ").replaceAll(" +", " "));
 		});
 		
 		//ready.forEach(System.out::println);
