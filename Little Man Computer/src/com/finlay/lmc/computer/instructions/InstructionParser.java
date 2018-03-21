@@ -12,7 +12,7 @@ import com.finlay.lmc.computer.Memory;
 
 public class InstructionParser {
 	
-	public static Memory parse(List<String> code) {
+	public static Memory parse(List<String> code) throws InstructionParserException {
 		boolean strict = false; //If true, ACC is not allowed.
 		ArrayList<String[]> parts = new ArrayList<>(code.size());
 		
@@ -25,10 +25,10 @@ public class InstructionParser {
 				continue;
 			}
 			
-			line = line.replaceAll("HLT", "HLT 0");
-			line = line.replaceAll("INP", "INP 1");
-			line = line.replaceAll("OUT", "OUT 2");
-			line = line.replaceAll("OTC", "OTC 22");
+			line = line.replaceAll("\\bHLT\\b", "HLT 0");
+			line = line.replaceAll("\\bINP\\b", "INP 1");
+			line = line.replaceAll("\\bOUT\\b", "OUT 2");
+			line = line.replaceAll("\\bOTC\\b", "OTC 22");
 			
 			String[] split = line.split(" ");
 			
@@ -36,12 +36,12 @@ public class InstructionParser {
 				if(split.length == 2) {
 					if(split[1].equalsIgnoreCase("ACC")) {
 						System.out.println("ACC not allowed in strict mode.");
-						return null;
+						throw new InstructionParserException("ACC is not allowed in strict mode.");
 					}
 				} else if(split.length == 3) {
 					if(split[2].equalsIgnoreCase("ACC")) {
 						System.out.println("ACC not allowed in strict mode.");
-						return null;
+						throw new InstructionParserException("ACC is not allowed in strict mode.");
 					}
 				}
 			}
@@ -77,12 +77,22 @@ public class InstructionParser {
 					case SUB:
 					case STA:
 					case STO:
-						address = variables.get(line[1])[0];
+						if(variables.containsKey(line[1])) {
+							address = variables.get(line[1])[0];
+						} else {
+							throw new InstructionParserException("Unknown variable " + line[1] + " on line " + (i + 1));
+						}
+						
 						break;
 					case BRA:
 					case BRP:
 					case BRZ:
-						address = labels.get(line[1]);
+						if(labels.containsKey(line[1])) {
+							address = labels.get(line[1]);
+						} else {
+							throw new InstructionParserException("Unknown label " + line[1] + " on line " + (i + 1));
+						}
+						
 						break;
 					default:
 						address = 0;
@@ -108,12 +118,22 @@ public class InstructionParser {
 					case SUB:
 					case STA:
 					case STO:
-						address = variables.get(line[2])[0];
+						if(variables.containsKey(line[2])) {
+							address = variables.get(line[2])[0];
+						} else {
+							throw new InstructionParserException("Unknown variable " + line[2] + " on line " + (i + 1));
+						}
+						
 						break;
 					case BRA:
 					case BRP:
 					case BRZ:
-						address = labels.get(line[2]);
+						if(labels.containsKey(line[2])) {
+							address = labels.get(line[2]);
+						} else {
+							throw new InstructionParserException("Unknown label " + line[2] + " on line " + (i + 1));
+						}
+						
 						break;
 					default:
 						address = 0;
@@ -125,13 +145,10 @@ public class InstructionParser {
 			}
 			
 			if(instruction == null) {
-				System.out.println(Arrays.toString(line));
-				System.out.println("Null instruction");
-				return null;
+				throw new InstructionParserException("Unknown instruction '" + Arrays.toString(line) + "' on line " + (i + 1));
 			}
 			
 			memory.set(i, instruction.toInteger());
-			
 		}
 		
 		for(Entry<String, Integer[]> entry : variables.entrySet()) {

@@ -45,7 +45,12 @@ public class LittleManComputer {
 		Processor processor = new Processor(this);
 		
 		while(active) {
-			processor.executeInstruction();
+			try {
+				processor.executeInstruction();
+			} catch (ProcessorException e) {
+				System.out.println(e.getMessage());
+				this.active = false;
+			}
 		}
 	}
 	

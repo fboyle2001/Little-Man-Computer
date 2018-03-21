@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.finlay.lmc.computer.LittleManComputer;
 import com.finlay.lmc.computer.instructions.InstructionParser;
+import com.finlay.lmc.computer.instructions.InstructionParserException;
 
 import lib.finlay.core.io.SerialFileHandler;
 
@@ -43,7 +44,15 @@ public class Program {
 		
 		//ready.forEach(System.out::println);
 		
-		LittleManComputer computer = new LittleManComputer(InstructionParser.parse(ready));
+		LittleManComputer computer;
+		
+		try {
+			computer = new LittleManComputer(InstructionParser.parse(ready));
+		} catch (InstructionParserException e) {
+			System.out.println(e.getMessage());
+			return;
+		}
+		
 		computer.start();
 		
 		if(dumpMemory) {

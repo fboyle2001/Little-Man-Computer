@@ -18,20 +18,20 @@ public class Processor {
 		this.accAddress = MAX_MEMORY / 2;
 	}
 	
-	public void executeInstruction() {
+	public void executeInstruction() throws ProcessorException {
 		Instruction instruction = computer.getMemory().getInstructionAt(programCounter);
+		
+		if(instruction == null) {
+			throw new ProcessorException("No instruction found at memory location [" + programCounter + "].");
+		}
+		
 		boolean incremented = false;
 		
-		//System.out.println(instruction);
-		//System.out.println(instruction.getAddress());
-		//System.out.println();
-		//System.out.println(accumulator);
 		switch(instruction.getOpcode()) {
 		case ADD:
 			accumulator += computer.getMemory().get(instruction.getAddress());
 			break;
 		case BRA:
-			// -1 denotes use the value in the accumulator. Only present if strict is disabled.
 			this.programCounter = instruction.getAddress() == accAddress ? this.accumulator : instruction.getAddress();
 			incremented = true;
 			break;
@@ -60,6 +60,7 @@ public class Processor {
 			} else {
 				System.out.print((char) this.accumulator);
 			}
+			
 			break;
 		case LDA:
 			this.accumulator = computer.getMemory().get(instruction.getAddress());

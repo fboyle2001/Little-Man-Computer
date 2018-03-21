@@ -13,7 +13,7 @@ public class Memory {
 	
 	public Memory() {
 		this.mappings = new LinkedHashMap<>(MAX_MEMORY);
-		//reset();
+		reset();
 	}
 	
 	public void reset() {
@@ -30,14 +30,20 @@ public class Memory {
 	
 	public int get(int address) {
 		if(!this.mappings.containsKey(address)) {
-			return 0;
+			return -1;
 		}
 		
 		return this.mappings.get(address);
 	}
 	
 	public Instruction getInstructionAt(int programCounter) {
-		return Instruction.fromInteger(get(programCounter));
+		int instruction = get(programCounter);
+		
+		if(instruction == -1) {
+			return null;
+		}
+		
+		return Instruction.fromInteger(instruction);
 	}
 	
 	public void print() {
